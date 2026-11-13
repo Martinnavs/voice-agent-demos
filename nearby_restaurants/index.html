@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nearby Restaurants - Cebu City</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background:#eef2f5; color:#222; }
+  header { padding:12px 16px; background:#2d6a4f; color:#fff; }
+  header h1 { margin:0; font-size:20px; }
+  header p { margin:4px 0 0; font-size:13px; opacity:.9; }
+  #map { position:relative; width:100%; max-width:900px; height:520px; margin:16px auto;
+         background-color:#dfe8d8; border:1px solid #9aa; border-radius:8px; overflow:hidden;
+         background-image:linear-gradient(#cfd9c6 1px, transparent 1px), linear-gradient(90deg, #cfd9c6 1px, transparent 1px);
+         background-size:60px 60px; }
+  .road { position:absolute; background:#fff; opacity:.8; }
+  .pin { position:absolute; transform:translate(-50%,-100%); cursor:pointer; text-align:center; }
+  .pin .dot { width:26px; height:26px; margin:0 auto; background:#d62828; border:3px solid #fff;
+              border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow:0 2px 4px rgba(0,0,0,.4); }
+  .pin .label { display:none; position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+                background:#fff; padding:6px 8px; border-radius:6px; white-space:nowrap; font-size:13px;
+                box-shadow:0 2px 6px rgba(0,0,0,.3); }
+  .pin.active .label, .pin:hover .label { display:block; }
+  #list { max-width:900px; margin:0 auto 24px; padding:0 16px; }
+  #list li { margin-bottom:8px; }
+  .note { max-width:900px; margin:0 auto; padding:0 16px; font-size:13px; color:#555; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Nearby Restaurants - Cebu City</h1>
+  <p>Map pins for three restaurants. Tap a pin to see its name.</p>
+</header>
+<div id="map" aria-label="Map of Cebu City restaurants"></div>
+<ul id="list"></ul>
+<p class="note">Note: exact addresses could not be confirmed. The pins sit in an approximate Cebu City area (spread apart so they can be seen). La Buona Forchetta and Thanin Co. could not be confirmed in Cebu City at all.</p>
+<script>
+  // Approximate layout inside a schematic map box (not exact coordinates).
+  var restaurants = [
+    { name: "La Buona Forchetta", x: 0.30, y: 0.35, status: "Cebu City location not confirmed" },
+    { name: "Eat Fresh Hong Kong Famous Street Food", x: 0.55, y: 0.55, status: "At least one Cebu City branch reported; exact address not confirmed" },
+    { name: "Thanin Co.", x: 0.72, y: 0.30, status: "Cebu City location not confirmed" }
+  ];
+  var map = document.getElementById("map");
+  var list = document.getElementById("list");
+  [[0.1,0.5,0.8,0.02],[0.45,0.1,0.02,0.8]].forEach(function(r){
+    var d = document.createElement("div"); d.className = "road";
+    d.style.left = r[0]*100 + "%"; d.style.top = r[1]*100 + "%";
+    d.style.width = r[2]*100 + "%"; d.style.height = r[3]*100 + "%";
+    map.appendChild(d);
+  });
+  restaurants.forEach(function(r){
+    var pin = document.createElement("div");
+    pin.className = "pin";
+    pin.style.left = (r.x*100) + "%";
+    pin.style.top = (r.y*100) + "%";
+    pin.innerHTML = '<div class="dot"></div><div class="label"></div>';
+    pin.querySelector(".label").textContent = r.name;
+    pin.addEventListener("click", function(){
+      document.querySelectorAll(".pin.active").forEach(function(p){ p.classList.remove("active"); });
+      pin.classList.add("active");
+    });
+    map.appendChild(pin);
+    var li = document.createElement("li");
+    li.innerHTML = "<strong></strong> - <span></span>";
+    li.querySelector("strong").textContent = r.name;
+    li.querySelector("span").textContent = r.status;
+    list.appendChild(li);
+  });
+</script>
+</body>
+</html>
