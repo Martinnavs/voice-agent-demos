@@ -23,26 +23,44 @@
   .pin.active .label, .pin:hover .label { display:block; }
   #list { max-width:900px; margin:0 auto 24px; padding:0 16px; }
   #list li { margin-bottom:8px; }
+  #list .src { font-size:12px; margin-left:6px; }
+  #list .src a { color:#2d6a4f; }
   .note { max-width:900px; margin:0 auto; padding:0 16px; font-size:13px; color:#555; }
 </style>
 </head>
 <body>
 <header>
   <h1>Nearby Restaurants - Cebu City</h1>
-  <p>Map pins for three restaurants. Tap a pin to see its name.</p>
+  <p>Map pins for <span id="count">12</span> famous Cebu City restaurants. Tap a pin to see its name.</p>
 </header>
 <div id="map" aria-label="Map of Cebu City restaurants"></div>
 <ul id="list"></ul>
-<p class="note">Note: exact addresses could not be confirmed. The pins sit in an approximate Cebu City area (spread apart so they can be seen). La Buona Forchetta and Thanin Co. could not be confirmed in Cebu City at all.</p>
+<p class="note">Note: exact addresses could not be confirmed for every entry. The pins sit in an approximate Cebu City area (spread apart so they can be seen), not at exact coordinates. La Buona Forchetta and Thanin Co. could not be confirmed in Cebu City at all. Lantaw Seafood and Grill (Compostela) is north of the city and was left out. The five MICHELIN Guide entries (Tatang's Lechon, Kalipay, Lasa, ATO-AH, The Pig & Palm) come from the MICHELIN Cebu City listing page; their addresses and current status were not checked. The three "classic eatery" entries (A One Tinula Ug Sinugba, Domings Ngohiong, Pungko Pungko sa Fuente) are from a video title and description only, so their details are unverified.</p>
 <script>
   // Approximate layout inside a schematic map box (not exact coordinates).
+  // src = source page for the facts shown; status = what was confirmed.
   var restaurants = [
-    { name: "La Buona Forchetta", x: 0.30, y: 0.35, status: "Cebu City location not confirmed" },
-    { name: "Eat Fresh Hong Kong Famous Street Food", x: 0.55, y: 0.55, status: "At least one Cebu City branch reported; exact address not confirmed" },
-    { name: "Thanin Co.", x: 0.72, y: 0.30, status: "Cebu City location not confirmed" }
+    { name: "La Buona Forchetta", x: 0.30, y: 0.35, status: "Cebu City location not confirmed", src: "" },
+    { name: "Eat Fresh Hong Kong Famous Street Food", x: 0.55, y: 0.55, status: "At least one Cebu City branch reported; exact address not confirmed", src: "https://menusph.com/eat-fresh-hong-kong-street-food-philippines-menu" },
+    { name: "Thanin Co.", x: 0.72, y: 0.30, status: "Cebu City location not confirmed", src: "" },
+    { name: "Zubuchon", x: 0.15, y: 0.75, status: "Named the best lechon in Cebu by a food blogger", src: "https://www.continentscondiments.com/best-lechon-in-cebu" },
+    { name: "Rico's Lechon", x: 0.85, y: 0.78, status: "Cebu City location reported; exact address not confirmed on a specific page", src: "" },
+    { name: "CnT Lechon", x: 0.38, y: 0.80, status: "V Rama Ave, Cebu City", src: "https://www.continentscondiments.com/best-lechon-in-cebu" },
+    { name: "House of Lechon", x: 0.62, y: 0.85, status: "Known for its Carcar Special lechon", src: "https://www.continentscondiments.com/best-lechon-in-cebu" },
+    { name: "Ilaputi", x: 0.22, y: 0.15, status: "Gastropub at Axis Entertainment Avenue, Vibo Place, N Escario St, Kamputhaw; began in 2002 as a small karinderya", src: "https://www.theinfatuation.com/cebu/guides/best-restaurants-cebu" },
+    { name: "Tongara Ramen", x: 0.48, y: 0.12, status: "Escario Central, N. Escario Street, Cebu City", src: "https://www.pepesamson.com/2022/08/where-to-eat-in-cebu.html" },
+    { name: "A One Tinula Ug Sinugba D Original", x: 0.10, y: 0.50, status: "Classic Cebu eatery (from a video title; address not confirmed)", src: "https://www.youtube.com/watch?v=FEUMHTeR2vQ&vl=en" },
+    { name: "Domings Ngohiong", x: 0.90, y: 0.45, status: "Classic Cebu eatery (from a video title; address not confirmed)", src: "https://www.youtube.com/watch?v=FEUMHTeR2vQ&vl=en" },
+    { name: "Pungko Pungko sa Fuente", x: 0.80, y: 0.10, status: "Classic Cebu eatery (from a video title; address not confirmed)", src: "https://www.youtube.com/watch?v=FEUMHTeR2vQ&vl=en" },
+    { name: "Tatang's Lechon", x: 0.30, y: 0.60, status: "Listed in the MICHELIN Guide for Cebu City (Filipino, budget price)", src: "https://guide.michelin.com/en/ph/central-visayas/cebu-city_2340421/restaurants" },
+    { name: "Kalipay", x: 0.68, y: 0.62, status: "Listed in the MICHELIN Guide for Cebu City (Spanish)", src: "https://guide.michelin.com/en/ph/central-visayas/cebu-city_2340421/restaurants" },
+    { name: "Lasa", x: 0.44, y: 0.42, status: "Listed in the MICHELIN Guide for Cebu City (Filipino)", src: "https://guide.michelin.com/en/ph/central-visayas/cebu-city_2340421/restaurants" },
+    { name: "ATO-AH", x: 0.82, y: 0.62, status: "Listed in the MICHELIN Guide for Cebu City (Filipino)", src: "https://guide.michelin.com/en/ph/central-visayas/cebu-city_2340421/restaurants" },
+    { name: "The Pig & Palm", x: 0.28, y: 0.92, status: "Listed in the MICHELIN Guide for Cebu City (European contemporary)", src: "https://guide.michelin.com/en/ph/central-visayas/cebu-city_2340421/restaurants" }
   ];
   var map = document.getElementById("map");
   var list = document.getElementById("list");
+  document.getElementById("count").textContent = restaurants.length;
   [[0.1,0.5,0.8,0.02],[0.45,0.1,0.02,0.8]].forEach(function(r){
     var d = document.createElement("div"); d.className = "road";
     d.style.left = r[0]*100 + "%"; d.style.top = r[1]*100 + "%";
@@ -65,6 +83,11 @@
     li.innerHTML = "<strong></strong> - <span></span>";
     li.querySelector("strong").textContent = r.name;
     li.querySelector("span").textContent = r.status;
+    if (r.src) {
+      var s = document.createElement("span"); s.className = "src";
+      var a = document.createElement("a"); a.href = r.src; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "[source]"; s.appendChild(a); li.appendChild(s);
+    }
     list.appendChild(li);
   });
 </script>
