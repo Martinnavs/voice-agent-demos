@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kapeng Barako</title>
+<style>
+  body { margin: 0; font-family: Georgia, serif; background: #f6efe6; color: #3b2a20; line-height: 1.6; }
+  header { background: #3b2a20; color: #f6efe6; padding: 2rem 1rem; text-align: center; }
+  header h1 { margin: 0 0 .3rem; font-size: 2.4rem; }
+  header p { margin: 0; font-style: italic; opacity: .85; }
+  main { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
+  h2 { color: #7a4a2b; border-bottom: 2px solid #d9c3a5; padding-bottom: .2rem; }
+  .strength { margin: 1.5rem 0; }
+  .strength label { display: block; font-weight: bold; margin-bottom: .3rem; }
+  .bar { background: #e2d3bf; border-radius: 6px; height: 22px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: linear-gradient(90deg, #a86b3c, #3b2a20); transition: width .8s ease; }
+  button { background: #7a4a2b; color: #fff; border: none; padding: .6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: inherit; }
+  button:hover { background: #5c3620; }
+  .fact { background: #fff; border-left: 4px solid #7a4a2b; padding: .8rem 1rem; margin: 1rem 0; }
+  footer { text-align: center; font-size: .85rem; color: #7a6a5c; padding: 2rem 1rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kapeng Barako</h1>
+  <p>The bold coffee of the Philippines</p>
+</header>
+<main>
+  <h2>What it is</h2>
+  <p>Kapeng Barako is a coffee from the Philippines, best known for its strong, robust flavor and pungent aroma. It is a local favorite, especially in its home province of Batangas, and is prized by people who want a coffee with a deep, intense character.</p>
+
+  <h2>A brief history</h2>
+  <p>Spanish friars introduced coffee to the Philippines in the 1740s, planting it in the lowlands of Lipa, Batangas. Barako is a Liberica variety, a coffee type distinct from the more common Arabica and Robusta. From Lipa it spread across Batangas, which became known for its coffee.</p>
+  <p>In the 1800s the Philippines became one of the world's major coffee producers, and Barako was exported as far as San Francisco and parts of Europe.</p>
+
+  <h2>Taste it for yourself</h2>
+  <p>Move the slider to choose how bold your cup should be, then press the button.</p>
+  <div class="strength">
+    <label for="s">Boldness: <span id="val">0</span>%</label>
+    <input type="range" id="s" min="0" max="100" value="0" style="width:100%">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+  </div>
+  <button id="brew">Brew a cup</button>
+  <div class="fact" id="msg">Press the button to brew a cup.</div>
+</main>
+<footer>Kapeng Barako &middot; A simple introduction</footer>
+<script>
+  var s = document.getElementById('s');
+  var val = document.getElementById('val');
+  var fill = document.getElementById('fill');
+  var msg = document.getElementById('msg');
+  function update() {
+    val.textContent = s.value;
+    fill.style.width = s.value + '%';
+  }
+  s.addEventListener('input', update);
+  document.getElementById('brew').addEventListener('click', function () {
+    var v = Number(s.value);
+    var text = v < 34 ? 'A mild cup.' : v < 67 ? 'A rich, medium-strong cup.' : 'A very bold, barako-strength cup.';
+    msg.textContent = text + ' Boldness set to ' + v + '%.';
+  });
+</script>
+</body>
+</html>
